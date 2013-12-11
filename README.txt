@@ -1,10 +1,9 @@
-Project Title: Spell Checker
+Project Title: Infix to Postfix Converter  
 
-Contributors: grub2k7, carlb15
-url: https://github.com/carlb15/spell_checker
+contributors: grubb2k7, carlb15
+url: https://github.com/carlb15/PostfixToInfix
 
 Description of the project. 
-Spell checks text files and highlights errors within the file in multiple languages.
-The design will be a Model, View, and Controller design that separates the UI from the
-algorithm. Each portion of the code will have a modular design where each method
-performs a specific function that is generalized for future improvement. 
+Takes either a file or command line input to convert an infix equation 
+to postfix. The results are either printed to a file or to the standard
+output. 
