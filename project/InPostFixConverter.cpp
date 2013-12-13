@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 	bool quiet = false;
 	bool overwrite = false;
 
-	while((opt = getopt(argc, argv, "qho")) != -1)
+	while((opt = getopt(argc, argv, "qho:")) != -1)
 	{
 		switch(opt) 
 		{
@@ -32,6 +32,8 @@ int main(int argc, char *argv[])
 			case 'o':
 			{
 				overwrite = true;
+				option = true;
+				break;
 			}
 			default:
 			{
@@ -85,7 +87,18 @@ int main(int argc, char *argv[])
 			line = C.GetExpression();
 			if(!quiet)
 			{
+				if(overwrite)
+				{
+					cout << "Overwritten to " << argv[i] << ":\n";
+				}
 				cout << line << endl;
+			}
+			if(overwrite)
+			{
+				ofstream out;
+				out.open(argv[i], ofstream::out | ofstream::trunc);
+				out << line << endl;
+				out.close();
 			}
 		}
 

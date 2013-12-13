@@ -46,7 +46,7 @@ void InPostFix::IntoPostFix(string line)
 			}
 			if(i!=line.size()-1)
 			{
-				expression.append(1u,'\n');
+				expression.append(" =\n");
 			}
 		}
 
@@ -189,7 +189,8 @@ void InPostFix::IntoPostFix(string line)
 		temp = theStack.top();
 		theStack.pop();
 		expression.append(temp);
-	}		
+	}
+	expression.append(" =");
 }
 
 void InPostFix::PosttoInFix(string line)
@@ -210,7 +211,7 @@ void InPostFix::PosttoInFix(string line)
 			strStack.pop();
 			if(i!=line.size()-1)
 			{
-				expression.append(1u,'\n');
+				expression.append(" =\n");
 			}
 		}
 		else if (isOperand(line[i]))
@@ -260,6 +261,7 @@ void InPostFix::PosttoInFix(string line)
 		expression.append(strStack.top());
 		strStack.pop();
 	}
+	expression.append(" =");
 	return;
 }
 
