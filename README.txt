@@ -15,6 +15,8 @@ Usage: ./PostfixInfix [OPTION] [FILE] [FUNCTION]...
 Options:
 -q          suppress normal output
 -h          display this help message
+-o		overwrites the original input file with output of conversion
+
 Functions:
 1		Infix to Postfix Conversion
 2		Postfix to Infix Conversion
@@ -33,8 +35,8 @@ Example:
   = a^B
 
 Result: 
-  abcd^e-fgh/+^*+i-
-  ab+
-  ab*
-  AB/
-  aB^
+ abcd^e-fgh/+^*+i- =
+ ab+ =
+ ab* =
+ AB/ =
+ aB^ =
