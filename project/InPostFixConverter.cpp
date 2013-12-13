@@ -83,7 +83,10 @@ int main(int argc, char *argv[])
                 	}
 			InPostFix C(line, *argv[i+1]);
 			line = C.GetExpression();
-			cout << line << endl;
+			if(!quiet)
+			{
+				cout << line << endl;
+			}
 		}
 
         }
