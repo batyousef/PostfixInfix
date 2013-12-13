@@ -12,8 +12,9 @@ int main(int argc, char *argv[])
 	int opt;
 	bool option = false;
 	bool quiet = false;
+	bool overwrite = false;
 
-	while((opt = getopt(argc, argv, "qh")) != -1)
+	while((opt = getopt(argc, argv, "qho")) != -1)
 	{
 		switch(opt) 
 		{
@@ -28,6 +29,10 @@ int main(int argc, char *argv[])
 				option = true;
 				break;
 			}
+			case 'o':
+			{
+				overwrite = true;
+			}
 			default:
 			{
 				help();
@@ -39,7 +44,7 @@ int main(int argc, char *argv[])
 	if ((argc <= 2 && !option) || (argc <= 3 && option))
 
         {
-		InPostFix C(cin,*argv[argc-1],quiet);
+		//InPostFix C(cin,*argv[argc-1],quiet);
 		return 0;
         }
 
@@ -67,8 +72,19 @@ int main(int argc, char *argv[])
 
                 else
                 {
-                        InPostFix C(in,*argv[i+1],quiet);
-                }
+			string line;
+			string temp;
+			char tempchar;
+			
+			while (in >> tempchar)
+			{
+				temp = tempchar;
+				line.append(temp);			
+                	}
+			InPostFix C(line, *argv[i+1]);
+			line = C.GetExpression();
+			cout << line << endl;
+		}
 
         }
 

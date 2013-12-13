@@ -6,17 +6,19 @@ using namespace std;
 class InPostFix
 {
 public:
-	InPostFix(istream& input, char function, bool q);
+	InPostFix(string line, char function);
 
-	void IntoPostFix(istream& input);
+	void IntoPostFix(string line);
 
-	void PosttoInFix(istream& input);
+	void PosttoInFix(string line);
 
 	int isOperand(char ch);
 
 	int Prec(char ch);
 
 	void Output(string message);
+
+	string GetExpression();
 
 private:
 	string expression;
@@ -27,4 +29,5 @@ private:
 	int col_count;
 	bool iserrormsg;
 	bool quiet;
+	bool overwrite;
 };

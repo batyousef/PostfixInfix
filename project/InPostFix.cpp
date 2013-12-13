@@ -8,215 +8,192 @@
 
 using namespace std;
 
-InPostFix::InPostFix(istream& input, char function, bool q)
+InPostFix::InPostFix(string line, char function)
 {
 	iserrormsg = false;
-	quiet = q;
 
 	switch (function)
 	{
 	case '1' :
-		IntoPostFix(input);
+		IntoPostFix(line);
 		break;
 	case '2':
-		PosttoInFix(input);
+		PosttoInFix(line);
 		break;
 	}
 }
 
-void InPostFix::IntoPostFix(istream& input)
+void InPostFix::IntoPostFix(string line)
 {
-	string line;
-	string temp;
-	char tempchar;
-	int i;
+	ostringstream stream;
 	bool prevSymb;
 	bool prevOprnd;
-	row_count = 1;
-	col_count = 0;
-	ostringstream stream;
+	prevSymb = false;
+	prevOprnd = false;
+	iserrormsg = false;
+	string temp;
 
-	while (!input.eof())
+	for (int i = 0; i < line.size(); i++)
 	{
-		input >> tempchar;
-		col_count++;
-		if (tempchar == '\n')
-		{			
-			col_count=0;
-			row_count++;
-		}
-		temp = tempchar;
-		if (temp[0] == '=' || input.peek() == EOF)
+		if (line[i] == ' ') continue;
+		else if(line[i] == '=')
 		{
-			prevSymb = false;
-			prevOprnd = false;
-			iserrormsg = false;
-
-			for (i = 0; i < line.size(); i++)
+			while (!theStack.empty())
 			{
-				if (line[i] == ' ') continue;
-
-				else if (isOperand(line[i]))
-				{
-					prevSymb = false;
-					
-					if (prevOprnd)
-					{
-						stream << "Infix to Postfix Conversion ERROR: Missing mathmatical symbol at: ["
-							<< row_count << ", " << col_count << "]";
-						errormsg = stream.str();
-						Output(errormsg);
-
-						expression.clear();
-						line.clear();
-
-						while (!theStack.empty())
-						{
-							theStack.pop();
-						}
-
-						iserrormsg = true;
-						break;
-					}
-
-					expression.append(line, i, 1);
-					prevOprnd = true;
-				}
-				else if (line[i] == '(')
-				{
-					if (line[i + 1] != NULL && !isOperand(line[i + 1]))
-					{
-						stream << "Infix to Postfix Conversion ERROR: Missing operand at: ["
-							<< row_count << ", " << col_count << "]";
-						errormsg = stream.str();
-						Output(errormsg);
-						expression.clear();
-						line.clear();
-						while (!theStack.empty())
-						{
-							theStack.pop();
-						}
-						iserrormsg = true;
-
-						break;
-					}
-					if ((i - 1) >= 0 && isOperand(line[i - 1]))
-					{
-						stream << "Infix to Postfix Conversion ERROR: Missing mathematical symbol at: ["
-							<< row_count << ", " << col_count << "]";
-						errormsg = stream.str();
-						Output(errormsg);
-						expression.clear();
-						line.clear();
-						while (!theStack.empty())
-						{
-							theStack.pop();
-						}
-						iserrormsg = true;
-
-						break;
-					}
-					theStack.push(line[i]);
-				}
-				else if (line[i] == ')')
-				{
-					if ((i - 1) >= 0 && !isOperand(line[i - 1]))
-					{
-						stream << "Infix to Postfix Conversion ERROR: Missing operand at: ["
-							<< row_count << ", " << col_count << "]";
-						errormsg = stream.str();
-						Output(errormsg);
-						expression.clear();
-						line.clear();
-						while (!theStack.empty())
-						{
-							theStack.pop();
-						}
-						iserrormsg = true;
-
-						break;
-					}
-					if (line[i + 1] != NULL && isOperand(line[i + 1]))
-					{
-						stream << "Infix to Postfix Conversion ERROR: Missing mathematical symbol at: ["
-							<< row_count << ", " << col_count << "]";
-						errormsg = stream.str();
-						Output(errormsg);
-						expression.clear();
-						line.clear();
-						while (!theStack.empty())
-						{
-							theStack.pop();
-						}
-						iserrormsg = true;
-
-						break;
-					}
-					while (!theStack.empty() && theStack.top() != '(')
-					{
-						temp = theStack.top();
-						theStack.pop();
-						expression.append(temp);
-					}
-					theStack.pop();
-				}
-				else
-				{
-					prevOprnd = false;
-					if (prevSymb)
-					{
-						stream << "Infix to Postfix Conversion ERROR: Missing operand at: ["
-							<< row_count << ", " << col_count << "]1";
-						errormsg = stream.str();
-						Output(errormsg);
-						expression.clear();
-						line.clear();
-						while (!theStack.empty())
-						{
-							theStack.pop();
-						}
-						iserrormsg = true;
-
-						break;
-					}
-					while (!theStack.empty() && Prec(line[i]) <= Prec(theStack.top()))
-					{
-						temp = theStack.top();
-						theStack.pop();
-						expression.append(temp);
-					}
-					theStack.push(line[i]);
-					prevSymb = true;
-				}
+				temp = theStack.top();
+				theStack.pop();
+				expression.append(temp);
 			}
-
-			if (!iserrormsg)
+			if(i!=line.size()-1)
 			{
-				while (!theStack.empty())
-				{
-					temp = theStack.top();
-					theStack.pop();
-					expression.append(temp);
-				}
-				Output(expression);
+				expression.append(1u,'\n');
+			}
+		}
+
+		else if (isOperand(line[i]))
+		{
+			/*prevSymb = false;
+			
+			if (prevOprnd)
+			{
+				stream << "Infix to Postfix Conversion ERROR: Missing mathmatical symbol at: ["
+					<< row_count << ", " << col_count << "]";
+				errormsg = stream.str();
+				Output(errormsg);
+
 				expression.clear();
 				line.clear();
+
+				while (!theStack.empty())
+				{
+					theStack.pop();
+				}
+
+				iserrormsg = true;
+				break;
+			}*/
+
+			expression.append(line, i, 1);
+			//prevOprnd = true;
+		}
+		else if (line[i] == '(')
+		{
+			/*if (line[i + 1] != NULL && !isOperand(line[i + 1]))
+			{
+				stream << "Infix to Postfix Conversion ERROR: Missing operand at: ["
+					<< row_count << ", " << col_count << "]";
+				errormsg = stream.str();
+				Output(errormsg);
+				expression.clear();
+				line.clear();
+				while (!theStack.empty())
+				{
+					theStack.pop();
+				}
+				iserrormsg = true;
+
+				break;
 			}
-			
+			if ((i - 1) >= 0 && isOperand(line[i - 1]))
+			{
+				stream << "Infix to Postfix Conversion ERROR: Missing mathematical symbol at: ["
+					<< row_count << ", " << col_count << "]";
+				errormsg = stream.str();
+				Output(errormsg);
+				expression.clear();
+				line.clear();
+				while (!theStack.empty())
+				{
+					theStack.pop();
+				}
+				iserrormsg = true;
+
+				break;
+			}*/
+			theStack.push(line[i]);
+		}
+		else if (line[i] == ')')
+		{
+			/*if ((i - 1) >= 0 && !isOperand(line[i - 1]))
+			{
+				stream << "Infix to Postfix Conversion ERROR: Missing operand at: ["
+					<< row_count << ", " << col_count << "]";
+				errormsg = stream.str();
+				Output(errormsg);
+				expression.clear();
+				line.clear();
+				while (!theStack.empty())
+				{
+					theStack.pop();
+				}
+				iserrormsg = true;
+
+				break;
+			}
+			if (line[i + 1] != NULL && isOperand(line[i + 1]))
+			{
+				stream << "Infix to Postfix Conversion ERROR: Missing mathematical symbol at: ["
+					<< row_count << ", " << col_count << "]";
+				errormsg = stream.str();
+				Output(errormsg);
+				expression.clear();
+				line.clear();
+				while (!theStack.empty())
+				{
+					theStack.pop();
+				}
+				iserrormsg = true;
+
+				break;
+			}*/
+			while (!theStack.empty() && theStack.top() != '(')
+			{
+				temp = theStack.top();
+				theStack.pop();
+				expression.append(temp);
+			}
+			theStack.pop();
 		}
 		else
 		{
-			line.append(temp);
+			/*prevOprnd = false;
+			if (prevSymb)
+			{
+				stream << "Infix to Postfix Conversion ERROR: Missing operand at: ["
+					<< row_count << ", " << col_count << "]1";
+				errormsg = stream.str();
+				Output(errormsg);
+				expression.clear();
+				line.clear();
+				while (!theStack.empty())
+				{
+					theStack.pop();
+				}
+				iserrormsg = true;
+
+				break;
+			}*/
+			while (!theStack.empty() && Prec(line[i]) <= Prec(theStack.top()))
+			{
+				temp = theStack.top();
+				theStack.pop();
+				expression.append(temp);
+			}
+			theStack.push(line[i]);
+			prevSymb = true;
 		}
 	}
 
-	
-		
+	while (!theStack.empty())
+	{
+		temp = theStack.top();
+		theStack.pop();
+		expression.append(temp);
+	}		
 }
 
-void InPostFix::PosttoInFix(istream& input)
+void InPostFix::PosttoInFix(string line)
 {
-	string line;
 	string temp;
 	string tempstr1;
 	string tempstr2;
@@ -224,69 +201,66 @@ void InPostFix::PosttoInFix(istream& input)
 	char tempchar;
 	int i;
 
-	while (!input.eof())
+	for (i = 0; i < line.size(); i++)
 	{
-		input >> tempchar;
-		temp = tempchar;
-		if (temp[0] == '=' || input.peek() == EOF)
+		if (line[i] == ' ') continue;
+		else if(line[i] == '=')
 		{
-			for (i = 0; i < line.size(); i++)
+			expression.append(strStack.top());
+			strStack.pop();
+			if(i!=line.size()-1)
 			{
-				if (line[i] == ' ') continue;
-				else if (isOperand(line[i]))
-				{
-					tempstr1 = line[i];
-					strStack.push(tempstr1);
-				}
-				else if (line[i] == '+' || line[i] == '-' || line[i] == '*' || line[i] == '/' || line[i] == '^')
-				{
-					if (!strStack.empty())
-					{
-						tempstr1 = strStack.top();
-						strStack.pop();
+				expression.append(1u,'\n');
+			}
+		}
+		else if (isOperand(line[i]))
+		{
+			tempstr1 = line[i];
+			strStack.push(tempstr1);
+		}
+		else if (line[i] == '+' || line[i] == '-' || line[i] == '*' || line[i] == '/' || line[i] == '^')
+		{
+			if (!strStack.empty())
+			{
+				tempstr1 = strStack.top();
+				strStack.pop();
 
-						if (strStack.empty())
-						{
-							//invalid expression statement
-						}
-
-						tempstr2 = strStack.top();
-						strStack.pop();
-						tempstr3 = line[i];
-						if (tempstr2.size() > 1 && tempstr1.size() > 1)
-						{
-							tempstr2.insert(0, 1, '(');
-							tempstr2.insert(tempstr2.end(), 1, ')');
-							tempstr1.insert(0, 1, '(');
-							tempstr1.insert(tempstr1.end(), 1, ')');
-						}
-						tempstr2.append(tempstr3);
-						tempstr2.append(tempstr1);
-
-						strStack.push(tempstr2);
-					}
-					else
-					{
-						//invalid expression statement
-					}
-				}
-				else
+				if (strStack.empty())
 				{
 					//invalid expression statement
 				}
-			}
-			expression = strStack.top();
-			strStack.pop();
 
-			Output(expression);
-			expression.clear();
-			line.clear();
+				tempstr2 = strStack.top();
+				strStack.pop();
+				tempstr3 = line[i];
+				if (tempstr2.size() > 1 && tempstr1.size() > 1)
+				{
+					tempstr2.insert(0, 1, '(');
+					tempstr2.insert(tempstr2.end(), 1, ')');
+					tempstr1.insert(0, 1, '(');
+					tempstr1.insert(tempstr1.end(), 1, ')');
+				}
+				tempstr2.append(tempstr3);
+				tempstr2.append(tempstr1);
+				strStack.push(tempstr2);
+			}
+			else
+			{
+				//invalid expression statement
+			}
 		}
 		else
 		{
-			line.append(temp);
+			//invalid expression statement
 		}
 	}
+
+	if(!strStack.empty())
+	{
+		expression.append(strStack.top());
+		strStack.pop();
+	}
+	return;
 }
 
 int InPostFix::isOperand(char ch)
@@ -319,4 +293,9 @@ void InPostFix::Output(string message)
 		cout << message << endl;
 	}
 	return;
+}
+
+string InPostFix::GetExpression()
+{
+	return expression;
 }
