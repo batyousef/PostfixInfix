@@ -1,12 +1,21 @@
-Project Title: Infix Postfix Conversion
+Infix Postfix Conversion
 
 contributors: grubb2k7, carlb15
 url: https://github.com/carlb15/PostfixInfix
 
+The project converts between infix and postfix form for a given equation
+from either the command line or a file. The results are printed to
+standard out or to a file.
+
+<!-- more -->
+
 Description of the project. 
 Takes either a file or command line input to convert an infix equation 
 to postfix and vice versa. The results are either printed to a file or 
-to the standard output. 
+to the standard output. The modular design makes the infix/postfix 
+algorithm the strong single center of the program. The other modules
+provide a thin interface wrapper for the algorithm. Finally, the clean
+output is simple and easily extensible for adding new modules.
 
 Building the project:
 run make command and have g++ downloaded.
