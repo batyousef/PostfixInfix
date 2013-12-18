@@ -20,7 +20,7 @@ output is simple and easily extensible for adding new modules.
 Building the project:
 run make command and have g++ downloaded.
 
-Usage: ./PostfixInfix [OPTION] [FILE] [FUNCTION]...
+Usage: ./PostfixInfix [OPTION] [INPUT FILE] [FUNCTION]...
 Options:
 -q		suppress normal output
 -h		display this help message
