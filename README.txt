@@ -25,7 +25,7 @@ Options:
 -q		suppress normal output
 -h		display this help message
 -o		overwrites the original input file with output of conversion.
-		Program lets user to chose 3 different arguments once program runs.
+		Program lets user to choose 3 different arguments once program runs.
 
 		original: overwrites the original input file.
 		pass: avoids overwriting any file and just outputs std out if -q
