@@ -24,14 +24,12 @@ Usage: ./PostfixInfix [OPTION] [INPUT FILE] [FUNCTION]...
 Options:
 -q		suppress normal output
 -h		display this help message
--o		overwrites the original input file with output of conversion.
-		Program lets user to choose 3 different arguments once program runs.
-
-		original: overwrites the original input file.
-		pass: avoids overwriting any file and just outputs std out if -q
-			is not set
-		existing file: user writes an existing file name that is within
-				the project folder.
+-o		overwrites a file designated on run time with input and output
+		data of conversion.  If file does not exist user can create
+		a new file.
+-a		appends the input and output data of conversion to a file
+		designated on run time.  If file does not exist user can
+		create a new file.
 
 Functions:
 1		Infix to Postfix Conversion
